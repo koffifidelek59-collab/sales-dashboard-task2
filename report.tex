@@ -1,0 +1,238 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}\usepackage[utf8]{inputenc}
+\usepackage[a4paper,top=2.6cm,bottom=2.6cm,left=2.7cm,right=2.7cm]{geometry}
+\usepackage{graphicx}\usepackage{booktabs}\usepackage{array}\usepackage{enumitem}
+\usepackage{caption}\usepackage{fancyhdr}\usepackage{amsmath}\usepackage{parskip}
+\usepackage[hidelinks]{hyperref}\usepackage{float}
+\captionsetup{font=small,labelfont=bf,labelsep=period,justification=raggedright,singlelinecheck=false}
+\setlist[itemize]{leftmargin=1.3em,itemsep=4pt,topsep=4pt}
+\setlist[enumerate]{leftmargin=1.6em,itemsep=6pt,topsep=4pt}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\footnotesize KOUAME KOFFI FID\`ELE}
+\fancyhead[C]{\footnotesize TASK 2 \textendash{} SALES ANALYSIS}
+\fancyhead[R]{\footnotesize Data Analysis Internship}
+\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0.4pt}
+\begin{document}
+
+\begin{titlepage}\centering
+\IfFileExists{logos.png}{\includegraphics[width=\linewidth]{logos.png}\\[1.4cm]}{\vspace*{0.4cm}}
+\rule{\linewidth}{0.5pt}\\[0.9cm]
+{\large\bfseries Data Analysis Internship}\\[0.7cm]
+{\normalsize\scshape Task 2 Report}\\[1.5cm]
+{\LARGE\bfseries Sales Data Cleaning, Validation}\\[0.55cm]
+{\LARGE\bfseries and Performance Dashboard}\\[1.6cm]
+\rule{\linewidth}{0.5pt}\\[1.5cm]
+{\large\itshape Analysis carried out on}\\[0.45cm]
+{\Large\bfseries THE FACTSALE DATASET}\\[0.45cm]
+{\normalsize 26{,}397 order lines, January 2013 to May 2016}\\[1.5cm]
+{\large\itshape Prepared by}\\[0.45cm]
+{\Large\bfseries KOUAME KOFFI FID\`ELE}\\[1.6cm]
+{\large\bfseries \today}\vfill\end{titlepage}
+
+\tableofcontents\newpage
+
+\section{Executive summary}
+
+The brief anticipates a dirty file: impossible calendar dates, duplicate rows, broken
+arithmetic. Each of those was tested explicitly. \textbf{Most of them are not present.}
+Every arithmetic identity in the file holds to within one cent, there are no duplicate
+records, and every date parses without exception.
+
+Reporting corrections that were not needed would have been the easy path. This report
+does the opposite: it states what the file actually contains, and the three findings
+that matter are structural rather than arithmetic.
+
+\begin{enumerate}
+\item \textbf{9{,}077 order lines, 34.4\% of the file, carry no customer key.}
+Every customer metric therefore describes two thirds of the business.
+\item \textbf{The last year is incomplete}, January to May 2016 only. Any year-on-year
+chart built without noticing shows a collapse that never happened.
+\item \textbf{A routine outlier screen would have deleted 48.0\% of all revenue.}
+Sales value is right-skewed by construction, and a symmetric rule applied to a skewed
+variable removes the top of the distribution rather than errors.
+\end{enumerate}
+
+No row was deleted. All 26{,}397 lines are retained.
+
+\section{Key performance indicators}
+
+\begin{table}[H]\centering
+\caption{The seven indicators selected for the dashboard}\small
+\begin{tabular}{@{}lrp{6.4cm}@{}}\toprule
+\textbf{KPI} & \textbf{Value} & \textbf{Why it was selected} \\ \midrule
+Total sales, excl. tax & 19.88M & The top line every other figure divides into \\
+Gross profit & 9.92M & Revenue that does not convert is not performance \\
+Gross margin & 49.9\% & The one ratio that survives a change of scale \\
+Orders (invoices) & 8{,}188 & Separates growth in volume from growth in basket \\
+Average order value & 2{,}428 & The lever a commercial team can actually pull \\
+Units sold & 1{,}028{,}670 & Detects margin bought with discount \\
+Identified customers & 48 & Bounds every customer conclusion in this report \\
+\bottomrule\end{tabular}\end{table}
+
+\section{The dashboard}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{07_dashboard.png}
+\caption{The sales performance dashboard. An interactive version, with hover detail,
+zoom and image export, is supplied as \texttt{dashboard.html} and opens in any browser
+without a server or an installation.}
+\end{figure}
+
+\subsection{Why each chart type was chosen}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{@{}p{3.6cm}p{3.0cm}p{6.6cm}@{}}\toprule
+\textbf{Panel} & \textbf{Type} & \textbf{Reason} \\ \midrule
+Sales trend & Line with moving average & Continuous time axis; the twelve-month window spans exactly one seasonal cycle, so the smoothed series isolates the trend \\
+Seasonality & Vertical bars & Months are ordered categories; this answers which month sells most, which the time series cannot because each month appears several times \\
+Package & Horizontal bars, log scale & One package type carries 96.8\% of sales; on a linear axis the other three are invisible \\
+Top products & Horizontal bars & Long product names read horizontally; only the top ten, since 227 bars answer nothing \\
+Customer concentration & Cumulative curve & Concentration is a distributional property, which a ranking cannot show \\
+\bottomrule\end{tabular}\end{table}
+
+A pie chart was deliberately not used. Comparing angles is less accurate than comparing
+lengths, and it fails entirely on a distribution as skewed as the package split.
+
+\section{Data quality}
+
+\subsection{Checks that passed}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{@{}lr@{}}\toprule
+\textbf{Check} & \textbf{Result} \\ \midrule
+Duplicate rows, full record & 0 \\
+Duplicate business keys & 0 \\
+Unparseable invoice dates & 0 \\
+Quantity $\times$ Unit Price $\neq$ Total excl. tax & 0 \\
+Total excl. $\times$ rate $\neq$ Tax amount & 0 \\
+Total excl. $+$ Tax $\neq$ Total incl. & 0 \\
+Quantity $\leq$ 0 & 0 \\
+Negative sales & 0 \\
+Delivery before invoice & 0 \\
+\bottomrule\end{tabular}\end{table}
+
+\subsection{Issues found and how each was handled}
+
+\paragraph{Unidentified customers.} 9{,}077 lines carry a customer key of zero,
+which is a placeholder rather than a customer. The rows are \textbf{kept} for all
+revenue, product and time analysis, because their financial fields are complete and
+removing them would delete a third of the revenue. They are \textbf{excluded} from
+customer analysis only, through an explicit flag rather than a silent filter.
+
+\paragraph{Incomplete final year.} The file ends on 31 May 2016. Seasonality and every
+month-on-month comparison are computed on the complete years only, and the partial
+period is shaded in every time series so a reader cannot mistake it.
+
+\paragraph{Missing delivery dates.} 13 lines have none. They are
+\textbf{not imputed}: the field feeds a delivery-lag metric, and an invented date would
+manufacture a lag that never happened. The rows are retained, since every revenue field
+on them is intact.
+
+\paragraph{Loss-making lines.} 566 lines return a negative margin.
+These are \textbf{kept}. A negative margin on a real sale is a commercial event, not a
+data error, and removing it would inflate total profit.
+
+\paragraph{High unit prices.} 113 lines exceed a unit price of 1{,}000.
+Inspection shows every one is the same product, an air cushion machine at a consistent
+price, with plausible quantities and sound arithmetic. It is an expensive product, not a
+typing error, and it is \textbf{kept}.
+
+\subsection{The outlier trap}
+
+An interquartile screen at 1.5 times the range flags 2{,}337 lines on sales
+value, that is 8.9\% of the file, and those lines carry
+\textbf{48.0\% of all revenue}.
+
+The screen was computed and \textbf{deliberately not applied}. The rule assumes an
+approximately symmetric distribution. Sales value is strongly right-skewed by
+construction, because a few large orders always exist. Applying a symmetric rule to a
+skewed variable does not remove errors; it removes the top of the distribution, which is
+precisely the revenue a sales analysis exists to explain.
+
+\section{Insights and recommendations}
+
+\subsection{A third of revenue cannot be attributed to a customer}
+
+34.4\% of order lines carry no customer key. This is a data capture
+failure upstream, and it is the most valuable finding of this audit: no segmentation, no
+lifetime value and no retention measure can be trusted until it is closed.
+
+\textbf{Recommendation.} Trace the unattributed lines back to their source system and
+establish why the key is absent. Until then, publish every customer figure with its
+coverage rate beside it.
+
+\subsection{Products are concentrated, customers are not}
+
+The top ten products carry 32.8\% of revenue out of 227 items.
+Among the 48 identified customers, however, the top 20\% carry only
+25\% of identified revenue, against 20\% under perfect equality.
+
+Revenue is spread almost evenly across the account base, which is the opposite of the
+pattern most retail businesses show. There is no key-account dependency, so no single
+customer loss threatens the top line; but there is equally no high-value tier to build a
+retention programme around.
+
+\textbf{Recommendation.} Do not build a key-account programme on this base, because the
+data says there are no key accounts. Concentrate commercial effort on the product side,
+and protect the availability and margin of the top ten items before anything else.
+
+\subsection{Price and volume move against each other, weakly}
+
+The correlation between unit price and quantity is -0.14, and between
+quantity and line revenue 0.24. The negative sign is expected:
+expensive items sell in smaller quantities. Its weakness matters more. Revenue per line is
+driven by price far more than by volume.
+
+\textbf{Recommendation.} Do not use volume discounting as a revenue lever on this
+catalogue. The correlation structure says it will not recover the revenue it gives up.
+
+\subsection{Seasonality is real but moderate}
+
+On the complete years the strongest calendar month outsells the weakest by a factor of
+1.33. That is worth planning around, but it does not justify large
+seasonal stock swings.
+
+\textbf{Recommendation.} Align staffing and inventory to the quarterly pattern rather
+than the monthly one, whose amplitude does not warrant the operational cost of adjusting
+to it.
+
+\subsection{Loss-making lines are a control issue, not a strategic one}
+
+566 lines return a negative margin, costing 40{,}502.
+Against total profit that is 0.41\%. Reporting it as a headline
+would be an error of proportion.
+
+\textbf{Recommendation.} Add an automated flag on negative-margin lines at invoicing
+rather than opening a pricing review. The cost of the fix should match the size of the
+problem.
+
+\section{Limitations}
+
+The dataset contains no cost of acquisition and no marketing spend, so customer
+acquisition cost and lifetime value cannot be computed and are not reported. It contains
+no geographic dimension beyond a city key that is not resolved to a place name, so no
+regional analysis is offered.
+
+The figures are descriptive. No statistical test accompanies them. The differences
+discussed are large enough that this is unlikely to change the conclusions, but the point
+is stated rather than assumed.
+
+\section*{Deliverables}
+\addcontentsline{toc}{section}{Deliverables}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{@{}ll@{}}\toprule
+\textbf{File} & \textbf{Content} \\ \midrule
+\texttt{dashboard.html} & Interactive dashboard, opens in any browser \\
+\texttt{report.pdf} & The present report \\
+\texttt{Task2\_Analysis.ipynb} & Commented analysis notebook \\
+\texttt{DATA\_QUALITY.md} & Full quality audit \\
+\texttt{INSIGHTS.md} & Insights and recommendations \\
+\texttt{data/FactSale\_clean.csv} & Cleaned dataset \\
+\texttt{charts/} & Seven figures, PNG \\
+\texttt{results/} & KPI and aggregate tables, plus the audit JSON \\
+\bottomrule\end{tabular}\end{table}
+
+\vspace{1.2cm}\noindent\rule{\linewidth}{0.4pt}\\[3pt]
+{\small\textbf{KOUAME Koffi Fid\`ele}\\ Data Analysis Internship\\ koffifidelek59@gmail.com}
+\end{document}
