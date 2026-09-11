@@ -1,0 +1,110 @@
+{
+  "rows_raw": 26397,
+  "cols_raw": 21,
+  "date_audit": {
+    "Invoice Date Key": {
+      "source_null": 0,
+      "unparsed_non_null": 0
+    },
+    "Delivery Date Key": {
+      "source_null": 13,
+      "unparsed_non_null": 0
+    }
+  },
+  "dup_full": 0,
+  "dup_salekey": 0,
+  "dup_business": 0,
+  "dup_removed": 0,
+  "missing": {
+    "delivery_date": 13
+  },
+  "delivery_missing": 13,
+  "validation": {
+    "qty_x_price_vs_total": 0,
+    "tax_rule": 0,
+    "total_rule": 0,
+    "qty_le_0": 0,
+    "price_le_0": 0,
+    "price_gt_1000": 113,
+    "sales_lt_0": 0,
+    "profit_lt_0": 566,
+    "delivery_before_invoice": 0,
+    "customer_key_zero": 9077,
+    "customer_key_zero_pct": 34.4,
+    "profit_lt_0_amount": -40502.15
+  },
+  "iqr": {
+    "Total Excluding Tax": {
+      "n": 2337,
+      "pct": 8.9,
+      "lower": -1056.0,
+      "upper": 2016.0,
+      "revenue_share": 48.0
+    },
+    "Unit Price": {
+      "n": 2742,
+      "pct": 10.4,
+      "lower": -15.5,
+      "upper": 60.5,
+      "revenue_share": 39.4
+    },
+    "Quantity": {
+      "n": 1589,
+      "pct": 6.0,
+      "lower": -77.5,
+      "upper": 142.5,
+      "revenue_share": 4.7
+    }
+  },
+  "coverage": {
+    "2013": {
+      "rows": 7136,
+      "first": "2013-01-01",
+      "last": "2013-12-31",
+      "sales": 5257954.55
+    },
+    "2014": {
+      "rows": 7720,
+      "first": "2014-01-01",
+      "last": "2014-12-31",
+      "sales": 5843423.25
+    },
+    "2015": {
+      "rows": 8281,
+      "first": "2015-01-01",
+      "last": "2015-12-31",
+      "sales": 6347855.45
+    },
+    "2016": {
+      "rows": 3260,
+      "first": "2016-01-01",
+      "last": "2016-05-31",
+      "sales": 2430359.55
+    }
+  },
+  "last_full_year": 2015,
+  "rows_clean": 26397,
+  "kpi": {
+    "Total sales (excl. tax)": 19879592.8,
+    "Total profit": 9923891.7,
+    "Gross margin %": 49.91999484013575,
+    "Orders (invoices)": 8188.0,
+    "Order lines": 26397.0,
+    "Average order value": 2427.893600390816,
+    "Units sold": 1028670.0,
+    "Distinct products": 227.0,
+    "Identified customers": 48.0
+  },
+  "best_month": 7,
+  "worst_month": 8,
+  "season_ratio": 1.3255870743622773,
+  "best_quarter": 2,
+  "top10_share": 32.81776978852404,
+  "n_customers": 48,
+  "top10_cust_share": 24.96467189063957,
+  "n_salespeople": 99,
+  "corr_qty_sales": 0.23770879111364665,
+  "corr_price_qty": -0.13557834289821216,
+  "corr_sales_profit": 0.9511583230318068,
+  "top20pct_customer_share": 24.96467189063957
+}
